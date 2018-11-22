@@ -1,0 +1,18 @@
+  <% include ../partials/header %>
+  
+  <div class="row">
+    <% contact.forEach(function(contacts) { %>
+                
+                <div class="item">
+                    <%= contacts.id %><br>
+                    <%= contacts.name %><br>
+                    <%= contacts.email %><br>
+                    <%= contacts.Comment %><br>
+                   
+                    </div>
+              
+         <% }); %>
+  </div>
+
+
+<% include ../partials/footer %>
