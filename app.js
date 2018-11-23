@@ -54,6 +54,8 @@ app.get("/contacts", function(req, res){
 
 
 
+
+
 // route to render contact info page 
 app.get("/addcontact", function(req, res){
     
@@ -119,7 +121,24 @@ app.post("/addcontact", function(req, res){
 
 
 
+// url to delete JSON
 
+app.get("/deletecontact/:id", function(req, res){
+    
+  var json = JSON.stringify(contact); // Convert our json data to a string
+  
+  var keyToFind = parseInt(req.params.id) // Getes the id from the URL
+  var data = contact; // Tell the application what the data is
+  var index = data.map(function(d) {return d.id;}).indexOf(keyToFind)
+  console.log("variable Index is : " + index)
+  console.log("The Key you ar looking for is : " + keyToFind);
+  
+  contact.splice(index, 1);
+  json = JSON.stringify(contact, null, 4); // converts the data to a json file and the null and 4 represent how it is structuere. 4 is indententation 
+      fs.writeFile('./model/contact.json', json, 'utf8')
+  res.redirect("/");
+    
+});
 
 
 
@@ -179,6 +198,39 @@ app.post('/add', function(req, res){
 });
 
 
+// render edit contact page 
+
+app.get("/editcontact/:id", function(req, res){
+    
+   function chooseContact(indOne){
+   return indOne.id === parseInt(req.params.id)
+  
+     }
+ 
+  var indOne = contact.filter(chooseContact);
+  
+  //res.send(indOne)
+  res.render("editcontact.ejs", {indOne});
+
+    
+});
+
+
+// Create post request to edit the individual review
+app.post('/editcontact/:id', function(req, res){
+ var json = JSON.stringify(contact);
+ var keyToFind = parseInt(req.params.id); // Id passed through the url
+ //var data = contact; // declare data as the reviews json file
+  var index = contact.map(function(contact) {return contact.id;}).indexOf(keyToFind)
+ 
+
+ contact.splice(index, 1, {name: req.body.name, Comment: req.body.comment, id: parseInt(req.params.id), email: req.body.email});
+ json = JSON.stringify(contact, null, 4);
+ fs.writeFile('./model/contact.json', json, 'utf8'); // Write the file back
+ res.redirect("/");
+});
+
+// end post request to edit the individual review
 
 
 
